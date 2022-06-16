@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.views import exception_handler
 
 from mozioapi.configurations.utilities.http_codes import BAD_REQUEST
-from ..utilities.api_response import BlogResponse
+from ..utilities.api_response import MozioResponse
 
 _ERROR_MESSAGE = "A server error has occurred."
 _TOKEN_INVALID_STATUS_CODE = 401
@@ -17,7 +17,7 @@ def custom_exception_handler(exc, context):
 
     else:
         response = Response(status=BAD_REQUEST)
-        response.data = BlogResponse(
+        response.data = MozioResponse(
             http_status=BAD_REQUEST,
             message=_ERROR_MESSAGE,
             data={"errors": [{"detail": str(exc)}]},
@@ -66,7 +66,7 @@ def __transform_error(response):
                 else:
                     error_format["errors"].append({field: "".join(value)})
 
-        response.data = BlogResponse(
+        response.data = MozioResponse(
             http_status=response.status_code,
             message=_ERROR_MESSAGE,
             data=error_format,
