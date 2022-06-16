@@ -154,3 +154,29 @@ class ServiceAreaView(viewsets.ModelViewSet):
             http_status=UPDATED,
             message=SUCCESSFULLY_UPDATED,
         ).build_response()
+
+
+@api_view(("GET",))
+def service_area_search(request):
+    if not request.GET.get("latitude") or not request.GET.get("longitude"):
+        raise MozioError(
+            http_status=BAD_REQUEST,
+            message="Please provide a valid latitude & longitude",
+        )
+
+    try:
+        latlong = [float(request.query_params.get(
+            "latitude")), float(request.GET.get("longitude"))]
+        qs = ServiceArea.objects.filter(
+            geojson_information__coordinates=latlong)
+        serializer = ServiceAreaViewSerializer(
+            qs, context={"request": request}, many=True)
+        return MozioResponse(
+            data=serializer.data
+        ).build_response()
+        
+    except Exception as e:
+        raise MozioError(
+            http_status=BAD_REQUEST,
+            message=f"Invalid parameters",
+        )
