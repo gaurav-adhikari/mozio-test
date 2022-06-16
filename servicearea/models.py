@@ -61,3 +61,10 @@ class ServiceArea(models.Model):
     geojson_information = models.JSONField(
         db_column="GEOJSON_INFORMATION", null=True, blank=True
     )
+
+    provider = models.ForeignKey(
+        db_column="PROVIDER_ID",
+        to=Provider,
+        on_delete=models.CASCADE,
+        related_name="s_provider",
+    )
