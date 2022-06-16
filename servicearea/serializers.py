@@ -24,4 +24,17 @@ class ServiceAreaSerializer(serializers.ModelSerializer):
                 "required": False,
             }
         }
-    
+
+
+class ServiceAreaViewSerializer(serializers.ModelSerializer):
+    provider = ProviderSerializer()
+
+    class Meta:
+        model = ServiceArea
+        fields = "__all__"
+        extra_kwargs = {
+            "id": {
+                "read_only": False,
+                "required": False,
+            }
+        }
