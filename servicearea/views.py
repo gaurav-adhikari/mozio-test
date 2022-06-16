@@ -1,13 +1,25 @@
 
 from rest_framework.decorators import api_view
 from rest_framework import viewsets
-
 from mozioapi.configurations.exceptions.mozio_core_exception import MozioError
-from mozioapi.configurations.utilities.global_constants import SUCCESSFULLY_CREATED, SUCCESSFULLY_UPDATED
-from mozioapi.configurations.utilities.http_codes import BAD_REQUEST, CREATED, UPDATED
+from mozioapi.configurations.utilities.global_constants import (
+    SUCCESSFULLY_CREATED,
+    SUCCESSFULLY_UPDATED
+)
+from mozioapi.configurations.utilities.http_codes import (
+    BAD_REQUEST,
+    CREATED,
+    UPDATED
+)
 from .models import Provider, ServiceArea
 from mozioapi.configurations.utilities.api_response import MozioResponse
-from .serializers import ProviderSerializer, ServiceAreaSerializer, ServiceAreaViewSerializer
+from .serializers import (
+    ProviderSerializer,
+    ServiceAreaSerializer,
+    ServiceAreaViewSerializer
+)
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 @api_view(["GET"])
@@ -22,6 +34,7 @@ class ProviderView(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
     serializer_class = ProviderSerializer
 
+    @method_decorator(cache_page(5))
     def list(self, request):
         result = Provider.objects.all()
         serializer = ProviderSerializer(
@@ -84,6 +97,7 @@ class ServiceAreaView(viewsets.ModelViewSet):
     queryset = ServiceArea.objects.all()
     serializer_class = ServiceAreaSerializer
 
+    @method_decorator(cache_page(20))
     def list(self, request):
         result = ServiceArea.objects.all()
         serializer = ServiceAreaViewSerializer(
@@ -117,7 +131,7 @@ class ServiceAreaView(viewsets.ModelViewSet):
             data=serializer.data,
             http_status=CREATED,
             message=SUCCESSFULLY_CREATED,
-        ).build_response()  
+        ).build_response()
 
     def update(self, request, pk):
         try:
