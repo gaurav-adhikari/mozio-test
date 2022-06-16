@@ -19,11 +19,11 @@ class Provider(models.Model):
         db_column="NAME", max_length=200, null=True, blank=True
     )
 
-    email = models.TextField(
-        db_column="EMAIL", null=False, blank=False, max_length=30
+    email = models.EmailField(
+        db_column="EMAIL", null=True, blank=True, max_length=254
     )
 
-    phone_number = models.TextField(
+    phone_number = models.BigIntegerField(
         db_column="PHONE_NUMBER", null=True, blank=True
     )
 
