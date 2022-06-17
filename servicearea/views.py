@@ -1,5 +1,5 @@
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, renderer_classes
 from rest_framework import viewsets
 from mozioapi.configurations.exceptions.mozio_core_exception import MozioError
 from mozioapi.configurations.utilities.global_constants import (
@@ -20,9 +20,11 @@ from .serializers import (
 )
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from rest_framework.renderers import JSONRenderer
 
 
 @api_view(["GET"])
+@renderer_classes([JSONRenderer])
 def welcome_api(request):
     """
     This functional component is used to display welcome
@@ -42,6 +44,7 @@ class ProviderView(viewsets.ModelViewSet):
 
     queryset = Provider.objects.all()
     serializer_class = ProviderSerializer
+    renderer_classes = [JSONRenderer]
 
     @method_decorator(cache_page(5))
     def list(self, request):
@@ -101,7 +104,7 @@ class ProviderView(viewsets.ModelViewSet):
         Args:
             pk (int): Primary key of Provider to update.
         """
-        
+
         try:
             instance = Provider.objects.get(id=pk)
         except Provider.DoesNotExist:
@@ -133,6 +136,7 @@ class ServiceAreaView(viewsets.ModelViewSet):
     # Initialize class variables
     queryset = ServiceArea.objects.all()
     serializer_class = ServiceAreaSerializer
+    renderer_classes = [JSONRenderer]
 
     # include static caching of 20 seconds
     @method_decorator(cache_page(20))
@@ -194,7 +198,7 @@ class ServiceAreaView(viewsets.ModelViewSet):
         Args:
             pk (int): Primary key of ServiceArea to update.
         """
-        
+
         try:
             instance = ServiceArea.objects.get(id=pk)
         except ServiceArea.DoesNotExist:
@@ -217,8 +221,8 @@ class ServiceAreaView(viewsets.ModelViewSet):
         ).build_response()
 
 
-
 @api_view(("GET",))
+@renderer_classes([JSONRenderer])
 def service_area_search(request):
     """
     This functional component is used to query ServiceArea with given
@@ -236,11 +240,11 @@ def service_area_search(request):
         # prepare data to a list to query the json field
         latlong = [float(request.query_params.get(
             "latitude")), float(request.GET.get("longitude"))]
-        
+
         # Query Database
         qs = ServiceArea.objects.filter(
             geojson_information__coordinates=latlong)
-        
+
         # Serialize the queryset
         serializer = ServiceAreaViewSerializer(
             qs, context={"request": request}, many=True)
