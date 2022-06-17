@@ -9,8 +9,8 @@ from .views import (
 )
 
 router = DefaultRouter()
-router.register("provider", ProviderView)
-router.register("service-area", ServiceAreaView)
+router.register("provider", ProviderView, basename='provider')
+router.register("service-area", ServiceAreaView,basename="service-area")
 
 
 urlpatterns = [
