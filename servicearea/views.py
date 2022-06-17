@@ -84,6 +84,17 @@ class ProviderView(viewsets.ModelViewSet):
         """
         This POST function takes a json body and creates a new
         Provider object.
+
+        **Sample Request Body:**
+
+        ```{
+            "name": "Joseph Timalsina",
+            "email": "joseph.timalsina@gmail.com",
+            "phone_number": 9779845123587,
+            "language": "Nepali",
+            "currency": "NPR"
+        }```
+
         """
         serializer = ProviderSerializer(
             data=request.data, context={"request": request})
@@ -103,6 +114,18 @@ class ProviderView(viewsets.ModelViewSet):
 
         Args:
             pk (int): Primary key of Provider to update.
+
+
+        **Sample Request Body:**
+
+        ```{
+            "name": "Joseph5 Timalsina",
+            "email": "joseph.timalsina@gmail.com",
+            "phone_number": 9779845123587,
+            "language": "Nepali",
+            "currency": "NPR"
+        }```
+
         """
 
         try:
@@ -178,6 +201,23 @@ class ServiceAreaView(viewsets.ModelViewSet):
         """
         This POST function takes a json body and creates a new
         ServiceArea object.
+
+
+        **Sample Request Body:**
+        ```
+        {
+            "provider": 1,
+            "name": "Geo55",
+            "price": 25000,
+            "geojson_information": {
+                "type": "Point",
+                "coordinates": [
+                125.6,
+                10.1
+                ]
+            }
+        }
+        ```
         """
         serializer = ServiceAreaSerializer(
             data=request.data, context={"request": request})
@@ -197,6 +237,23 @@ class ServiceAreaView(viewsets.ModelViewSet):
 
         Args:
             pk (int): Primary key of ServiceArea to update.
+
+        
+        **Sample Request Body:**
+        ```
+        {
+            "provider": 1,
+            "name": "Geo55New",
+            "price": 25000,
+            "geojson_information": {
+                "type": "Point",
+                "coordinates": [
+                125.6,
+                10.1
+                ]
+            }
+        }
+        ```
         """
 
         try:
@@ -223,16 +280,14 @@ class ServiceAreaView(viewsets.ModelViewSet):
 
 @api_view(("GET",))
 @renderer_classes([JSONRenderer])
-def service_area_search(request):
+def service_area_search(request,):
     """
     This functional component is used to query ServiceArea with given
-    latitude and longitude from the request object
+    latitude and longitude from the request object.
 
-    Request body:
-    GET: service-area-search?latitude={}&longitude={}
+    Request body- service-area-search?latitude={}&longitude={}
 
-    Sample:    
-        service-area-search?latitude=125.6&longitude= 10.1
+    Sample Request- service-area-search?latitude=125.6&longitude= 10.1
 
     """
 
