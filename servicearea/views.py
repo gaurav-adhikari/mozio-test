@@ -4,11 +4,13 @@ from rest_framework import viewsets
 from mozioapi.configurations.exceptions.mozio_core_exception import MozioError
 from mozioapi.configurations.utilities.global_constants import (
     SUCCESSFULLY_CREATED,
+    SUCCESSFULLY_DELETED,
     SUCCESSFULLY_UPDATED
 )
 from mozioapi.configurations.utilities.http_codes import (
     BAD_REQUEST,
     CREATED,
+    OK,
     UPDATED
 )
 from .models import Provider, ServiceArea
@@ -150,6 +152,29 @@ class ProviderView(viewsets.ModelViewSet):
         ).build_response()
 
 
+    def destroy(self, request, pk):
+
+        """
+        This DELETE function deletes a provider instance.
+
+        Args:
+            pk (int): Primary key of Provider to delete.
+        """
+
+        try:
+            instance = Provider.objects.get(id=pk)
+            instance.delete()
+        except Provider.DoesNotExist:
+            raise MozioError(
+                http_status=BAD_REQUEST,
+                message="No Matching Record found"
+            )
+        return MozioResponse(
+            http_status=OK,
+            message=SUCCESSFULLY_DELETED,
+        ).build_response()
+
+
 class ServiceAreaView(viewsets.ModelViewSet):
     """
     This viewset class provides `list`, `create`, `retrieve`,
@@ -275,6 +300,28 @@ class ServiceAreaView(viewsets.ModelViewSet):
             data=serializer.data,
             http_status=UPDATED,
             message=SUCCESSFULLY_UPDATED,
+        ).build_response()
+
+    def destroy(self, request, pk):
+
+        """
+        This DELETE function deletes a service area instance.
+
+        Args:
+            pk (int): Primary key of ServiceArea to delete.
+        """
+
+        try:
+            instance = ServiceArea.objects.get(id=pk)
+            instance.delete()
+        except ServiceArea.DoesNotExist:
+            raise MozioError(
+                http_status=BAD_REQUEST,
+                message="No Matching Record found"
+            )
+        return MozioResponse(
+            http_status=OK,
+            message=SUCCESSFULLY_DELETED,
         ).build_response()
 
 
