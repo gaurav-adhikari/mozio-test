@@ -227,6 +227,13 @@ def service_area_search(request):
     """
     This functional component is used to query ServiceArea with given
     latitude and longitude from the request object
+
+    Request body:
+    GET: service-area-search?latitude={}&longitude={}
+
+    Sample:    
+        service-area-search?latitude=125.6&longitude= 10.1
+
     """
 
     # validate if the args are passed onto the query params.
